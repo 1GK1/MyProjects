@@ -11,10 +11,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        fileName = args[0];
+//        Game game = new Game();
 
+        fileName = args[0];
+//
         prepareListOfWords();
-        wordToGuess = prepareWordToGuess();  //what is better: method with String return or just method without return and no assigning, but global static fields?
+        System.out.println(result);
+        System.out.println();
+        wordToGuess = prepareWordToGuess();
         codedWord = codeWordToGuess(wordToGuess, letterToShow);
 
         int attempt = 1;
@@ -29,19 +33,20 @@ public class Main {
             if (codedWord.equals(wordToGuess)) {
                 System.out.println("You guessed the coded word! Congrat!");
                 System.exit(0);
+//                return;
             }
             attempt++;
         } while (attempt <= numberOfAttempts);
 
-        if (!codedWord.equals(wordToGuess)) {
-            System.out.printf("\nSorry, but you lost all your attempts. The coded word was: \"%S\".", wordToGuess);
-            System.exit(0);
-        }
+        System.out.printf("\nSorry, but you lost all your attempts. The coded word was: \"%S\".", wordToGuess);
+        System.exit(0);
     }
 
 
-    private static String checkUserAnswer(String wordToGuess, String hiddenWord, char letterFromUser) {
-        char[] outputWordChars = hiddenWord.toCharArray();
+    // how to change this method using charArryay
+    private static String checkUserAnswer(String wordToGuess, String codedWord, char letterFromUser) {
+
+        char[] outputWordChars = codedWord.toCharArray();
         for (int i = 0; i < outputWordChars.length; i++) {
             if (wordToGuess.charAt(i) == letterFromUser) {
                 outputWordChars[i] = letterFromUser;
@@ -49,6 +54,16 @@ public class Main {
         }
         return String.valueOf(outputWordChars);
     }
+
+//    private static String checkUserAnswer(String wordToGuess, String codedWord, char letterFromUser) {
+//        char[] outputWordChars = codedWord.toCharArray();
+//        for (int i = 0; i < outputWordChars.length; i++) {
+//            if (wordToGuess.charAt(i) == letterFromUser) {
+//                outputWordChars[i] = letterFromUser;
+//            }
+//        }
+//        return String.valueOf(outputWordChars);
+//    }
 
 
     private static void prepareListOfWords() {
@@ -63,24 +78,33 @@ public class Main {
     }
 
     private static String prepareWordToGuess() {
-        Draw randomWord = new Draw();
-        Draw randomLetter = new Draw();
-        wordToGuess = randomWord.drawWordFromList(result);
-//        System.out.println("Word to guess: " + wordToGuess);
-        letterToShow = randomLetter.drawLetterFromWord(wordToGuess);
-//        System.out.println("Chosen letter: " + letterToShow);
+        Draw random = new Draw();
+        wordToGuess = random.drawWordFromList(result);
+        letterToShow = random.drawLetterFromWord(wordToGuess);
         return wordToGuess;
     }
 
+//    private static String codeWordToGuess(String wordToGuess, char letterToShow) {
+//        String hiddenWord = "";
+//        for (char c : wordToGuess.toCharArray()) {
+//            if (c == letterToShow) {
+//                hiddenWord += letterToShow;
+//            } else {
+//                hiddenWord += "*";
+//            }
+//        }
+//        return hiddenWord;
+
+    //  what else can be change here?
     private static String codeWordToGuess(String wordToGuess, char letterToShow) {
-        String hiddenWord = "";
-        for (int i = 0; i < wordToGuess.length(); i++) {
-            if (wordToGuess.charAt(i) == letterToShow) {
-                hiddenWord += letterToShow;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char c : wordToGuess.toCharArray()) {
+            if (c == letterToShow) {
+                stringBuilder.append(letterToShow);
             } else {
-                hiddenWord += "*";
+                stringBuilder.append("*");
             }
         }
-        return hiddenWord;
+        return stringBuilder.toString();
     }
 }
