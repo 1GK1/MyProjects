@@ -1,3 +1,6 @@
+//todo wszedzie brakowalo package flatmap - musiosz zdjefiniowac pakiet.
+package flatmap;
+import flatmap.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,14 +10,16 @@ public class Main {
     public static void main(String[] args) {
 
         List<Book> javaBooks = List.of(
-                new Book("Java EE 7 Essentials", 2013, List.of("Arun Gupta")),
-                new Book("Algorithms", 2011, List.of("Robert Sedgewick", "Kevin Wayne")),
-                new Book("Clean code", 2014, List.of("Robert Martin"))
+                //TODO ten konstruktor ma 4 parametry :)
+                new Book("Java EE 7 Essentials", 2013, List.of("Arun Gupta"), List.of())
+                //new Book("Algorithms", 2011, List.of("Robert Sedgewick", "Kevin Wayne")),
+                //new Book("Clean code", 2014, List.of("Robert Martin"))
         );
 
 
         List<String> authors = javaBooks.stream()
-                .flatMap(book -> book.getAuthors.stream())
+                //TODO tutaj brakowalo Ci po prostu nawiasu po getAuthors
+                .flatMap(book -> book.getAuthors().stream())
                 .collect(Collectors.toList());
 
 
