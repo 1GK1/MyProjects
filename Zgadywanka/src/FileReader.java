@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class FileReader {
     public List<String> getListFromFile(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
+        Scanner scanner = new Scanner(file).findAll();
 
         List<String> result = new ArrayList<>();
         while(scanner.hasNextLine()) {
