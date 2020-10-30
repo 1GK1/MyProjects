@@ -1,124 +1,125 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 public class Game {
-    private char letterAnswered;
-    public String wordToGuess;
-    public String codedWord;
-    public List<String> result;
-    public Scanner scanner;
-    public char letterToShow;
-    private int numberOfAttempts;
-    private int attempt;
-    static public int gameNo = 1;
+  private final FileReader reader;
+  private final Validator validator;
+  public String wordToGuess;
+  public String codedWord;
+  public List<String> wordsFromFile;
+  public Scanner scanner;
+  public char letterToShow;
+  private char letterAnswered;
+  private int numberOfAttempts;
+  private int attempt;
+  private boolean gameOver;
 
-//    private Draw draw;
+  public Game() {
+    System.out.println("Game starts...");
+    scanner = new Scanner(System.in);
+    gameOver = false;
+    reader = new FileReader();
+    validator = new Validator();
+    wordsFromFile = new ArrayList<>();
+  }
 
+  // I want to invoke this method only once, when the game begins; if the player wants to continue
+  // the game, the same list of words must be used
+  public void init(String fileName) {
+    // todo i add this return value because it is more readable;
+    wordsFromFile = prepareListOfWords(fileName);
+    final String message =
+        wordsFromFile.isEmpty()
+            ? "File not found or is empty"
+            : "The list has words: {}" + wordsFromFile.size();
+    System.out.println(message);
+  }
 
-    public Game() {
-        System.out.println("Game starts...");
-        scanner = new Scanner(System.in);
-        Draw draw = new Draw();
+  private String prepareWordToGuess() {
+    Draw random = new Draw();
+    wordToGuess = random.drawWordFromList(wordsFromFile);
+    // todo here you delete current words so it will not be considered in the next round.
+    wordsFromFile.remove(wordToGuess);
+    System.out.println("The list has words: " + wordsFromFile.size());
+    System.out.println();
+    letterToShow = random.drawLetterFromWord(wordToGuess);
+    return wordToGuess;
+  }
+
+  public List<String> prepareListOfWords(String fileName) {
+    try {
+      System.out.println("Preparing list of words");
+      return validator.validateList(reader.getListFromFile(fileName));
+    } catch (IOException e) {
+      // todo this is critical problem - please create strategy to handle it.
+      e.printStackTrace();
+      // todo this method should provide list of words or end program !
+      return Collections.emptyList();
+    }
+  }
+
+  private String codeWordToGuess(String wordToGuess, char letterToShow) {
+    String hiddenWord = "";
+    for (int i = 0; i < wordToGuess.length(); i++) {
+      if (wordToGuess.charAt(i) == letterToShow) {
+        hiddenWord += letterToShow;
+      } else {
+        hiddenWord += "*";
+      }
+    }
+    return hiddenWord;
+  }
+
+  public void start() {
+    wordToGuess = prepareWordToGuess();
+    codedWord = codeWordToGuess(wordToGuess, letterToShow);
+
+    numberOfAttempts = (int) (wordToGuess.length() * 1.5);
+    System.out.printf(
+        "Your coded words has %d letters. You have %d attempts to guess it.\n\n",
+        wordToGuess.length(), numberOfAttempts);
+    System.out.println("Coded words: " + codedWord);
+  }
+
+  public void playGame() {
+
+    System.out.print("Input letter [or press 1 to exit]: ");
+    letterAnswered = scanner.next().charAt(0);
+    codedWord = checkUserAnswer(wordToGuess, codedWord, letterAnswered);
+    System.out.printf("\nCoded words after %d attempt: %s %n", attempt, codedWord);
+
+    if (codedWord.equals(wordToGuess)) {
+      System.out.println("You guessed the coded words! Congrat!");
+      // todo set gameOver flag - ask user if he want to continue or not.
+      gameOver = true;
+    }
+  }
+
+  private String checkUserAnswer(String wordToGuess, String codedWord, char letterFromUser) {
+
+    if (letterAnswered == '1') {
+      System.out.println("\nThe player has stopped the game.");
+      System.exit(0);
     }
 
-    // I want to invoke this method only once, when the game begins; if the player wants to continue the game, the same list of words must be used
-    public void init(String fileName) {
-        prepareListOfWords(fileName);
-        System.out.println("The list has words: " + result.size());
+    char[] outputWordChars = codedWord.toCharArray();
+    for (int i = 0; i < outputWordChars.length; i++) {
+      if (wordToGuess.charAt(i) == letterFromUser) {
+        outputWordChars[i] = letterFromUser;
+      }
     }
+    return String.valueOf(outputWordChars);
+  }
 
-    private String prepareWordToGuess() {
-        Draw random = new Draw();
-        wordToGuess = random.drawWordFromList(result);
-        result.remove(wordToGuess);
-        System.out.println("The list has words: " + result.size());
-        System.out.println();
-        letterToShow = random.drawLetterFromWord(wordToGuess);
-        return wordToGuess;
-    }
+  public boolean isGameOver() {
+    return gameOver;
+  }
 
-    public void prepareListOfWords(String fileName) {
-        if (result == null) {
-            try {
-                System.out.println("Preparing list of words");
-                FileReader reader = new FileReader();
-                Validator validator = new Validator();
-                result = reader.getListFromFile(fileName);
-                result = validator.validateList(result);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("List of words is ready...");
-        }
-    }
-
-    private String codeWordToGuess(String wordToGuess, char letterToShow) {
-        String hiddenWord = "";
-        for (int i = 0; i < wordToGuess.length(); i++) {
-            if (wordToGuess.charAt(i) == letterToShow) {
-                hiddenWord += letterToShow;
-            } else {
-                hiddenWord += "*";
-            }
-        }
-        return hiddenWord;
-    }
-
-    public void start() {
-        wordToGuess = prepareWordToGuess();
-        codedWord = codeWordToGuess(wordToGuess, letterToShow);
-
-        numberOfAttempts = (int) (wordToGuess.length() * 1.5);
-        System.out.printf("Your coded word has %d letters. You have %d attempts to guess it.\n\n", wordToGuess.length(), numberOfAttempts);
-        System.out.println("Coded word: " + codedWord);
-    }
-
-    public void playGame() {
-        attempt = 1;
-        do {
-            System.out.print("Input letter [or press 1 to exit]: ");
-            letterAnswered = scanner.next().charAt(0);
-            codedWord = checkUserAnswer(wordToGuess, codedWord, letterAnswered);
-            System.out.printf("\nCoded word after %d attempt: %s %n", attempt, codedWord);
-
-            if (codedWord.equals(wordToGuess)) {
-                System.out.println("You guessed the coded word! Congrat!");
-                newGame();
-            }
-            attempt++;
-        } while (attempt <= numberOfAttempts);
-
-        System.out.printf("\nSorry, but you lost all your attempts. The coded word was: \"%S\".", wordToGuess);
-        newGame();
-    }
-
-    private void newGame() {
-        System.out.println("\n\nDo you want to play again [y - new game, any key to close]? ");
-        if(scanner.next().equals("y")){
-            gameNo++;
-            System.out.println("New game\n");
-        } else {
-            System.out.println("Bye, bye...");
-            System.exit(0);
-        }
-    }
-
-    private String checkUserAnswer(String wordToGuess, String codedWord, char letterFromUser) {
-
-        if (letterAnswered == '1') {
-            System.out.println("\nThe player has stopped the game.");
-            System.exit(0);
-        }
-
-        char[] outputWordChars = codedWord.toCharArray();
-        for (int i = 0; i < outputWordChars.length; i++) {
-            if (wordToGuess.charAt(i) == letterFromUser) {
-                outputWordChars[i] = letterFromUser;
-            }
-        }
-        return String.valueOf(outputWordChars);
-    }
+  public void setGameOver(final boolean gameOver) {
+    this.gameOver = gameOver;
+  }
 }
-
