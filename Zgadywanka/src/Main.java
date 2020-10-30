@@ -2,11 +2,32 @@ public class Main {
 
     public static void main(String[] args) {
 
-        final String fileName = args[0];
+
+        boolean startNewGame = true;
         Game game = new Game();
-        game.init(fileName);
-        game.start();
+
+        do {
+            switch (Game.gameNo) {
+                case 1:
+                    final String fileName = args[0];
+                    game.init(fileName);
+                    game.start();
+                    game.playGame();
+                    break;
+                default:
+                    System.out.println("default");
+                    Game game1 = new Game();
+                    game1.start();
+                    game1.playGame();
+                    break;
+            }
+        } while (startNewGame);
     }
+
+//    public void increaseGameNo(){
+//        gameNo++;
+//    }
+}
 
 //    private static void prepareListOfWords() {
 //        try {
@@ -38,7 +59,7 @@ public class Main {
 //        return hiddenWord;
 //    }
 
-    //      what else can be change here?
+//      what else can be change here?
 //    private static String codeWordToGuess(String wordToGuess, char letterToShow) {
 //        StringBuilder stringBuilder = new StringBuilder();
 //        for (char c : wordToGuess.toCharArray()) {
@@ -50,4 +71,3 @@ public class Main {
 //        }
 //        return stringBuilder.toString();
 //    }
-}
