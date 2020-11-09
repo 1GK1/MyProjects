@@ -1,10 +1,9 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 
 public class FileReaderTest {
+    public static void main(String[] args) {
+
+
 // not used
 //    String b = "";
 //    File file = new File("input.txt");
@@ -15,9 +14,16 @@ public class FileReaderTest {
 //    }
 //
 //    String[] array = b.split(" ");
-//        System.out.println(Arrays.toString(array));
+    String[] array = {"a", "b","c"};
+        System.out.println(Arrays.toString(array));
+        " ".split(array[0]);
+
+        Arrays.stream(array)
+                .filter(a -> a.equals("b"))
+                .forEach(a -> System.out.println(a));
 //    List<String> list = Arrays.asList(array);
 //        System.out.println(list);
 //    String[] newArray = list.toArray(new String[0]);
 //        System.out.println(Arrays.toString(array));
+    }
 }
