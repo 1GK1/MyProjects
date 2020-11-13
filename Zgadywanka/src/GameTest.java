@@ -1,14 +1,9 @@
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //import org.junit.jupiter.api.Test;
@@ -26,7 +21,6 @@ class GameTest {
         game = new Game();
 
 
-
 //        result = game.prepareListOfWords(FILE_NAME);
 //        Collections.sort(result);
 //        expectedResult = new ArrayList<>();
@@ -37,48 +31,48 @@ class GameTest {
 //        Collections.sort(expectedResult);
     }
 
-    @Test
-    void checkIfFileReaderWorksss() {
-
-        assertEquals(expectedResult, result);
-    }
-
-
-    @Test
-    void testIfHasItems() {
-        Assert.assertThat(
-                result,
-                hasItems("wine", "bite"));
-    }
-
-    @Test
-    public void testAssertThatHasItems() {
-        assertThat(
-                Arrays.asList("Java", "Kotlin", "Scala"),
-                hasItems("Java", "Kotlin"));
-    }
-
-
-    // just one test in one Class? What to do if I need to do more?
-
-
-    @Test
-    void checkIfFileReaderWorks() {
-//        fail("FAIL - test not completed");
-        result = game.prepareListOfWords(FILE_NAME);
-        Collections.sort(result);
-        String expected = "Baeldung";
-        String actual = "Baeldung";
-        String car = "a";
-
-        Assertions.assertAll(
-                "INFO:",
-                () -> assertEquals(expectedResult, result, "List is not equal"),
-                () -> assertEquals(expected, actual, "NOT EQUAL"),
-                () -> assertNull("The car should be null", car)
-
-        );
-    }
+//    @Test
+//    void checkIfFileReaderWorksss() {
+//
+//        assertEquals(expectedResult, result);
+//    }
+//
+//
+//    @Test
+//    void testIfHasItems() {
+//        Assert.assertThat(
+//                result,
+//                hasItems("wine", "bite"));
+//    }
+//
+//    @Test
+//    public void testAssertThatHasItems() {
+//        assertThat(
+//                Arrays.asList("Java", "Kotlin", "Scala"),
+//                hasItems("Java", "Kotlin"));
+//    }
+//
+//
+//    // just one test in one Class? What to do if I need to do more?
+//
+//
+//    @Test
+//    void checkIfFileReaderWorks() {
+////        fail("FAIL - test not completed");
+//        result = game.prepareListOfWords(FILE_NAME);
+//        Collections.sort(result);
+//        String expected = "Baeldung";
+//        String actual = "Baeldung";
+//        String car = "a";
+//
+//        Assertions.assertAll(
+//                "INFO:",
+//                () -> assertEquals(expectedResult, result, "List is not equal"),
+//                () -> assertEquals(expected, actual, "NOT EQUAL"),
+//                () -> assertNull("The car should be null", car)
+//
+//        );
+//    }
 
 
 //     @Test
@@ -91,29 +85,29 @@ class GameTest {
 //         );
 //     }
 
+//    @Test
+//    public void whenAssertingEquality_thenEqual() {
+//        String expected = "Baeldung";
+//        String actual = "Baeldung";
+//
+//        assertEquals(expected, actual, "NOT EQUAL");
+//    }
+//
+//
+//    @Test
+//    public void whenAssertingNull_thenTrue() {
+//        String car = null;
+//        assertNull("The car should be null", car);
+//    }
+//
+//    @Test
+//    public void whenAssertingConditions_thenVerified() {
+//        assertTrue("5 is greater then 4", 5 > 4);
+//        assertFalse("5 is not greater then 6", 5 > 6);
+//    }
+
     @Test
-    public void whenAssertingEquality_thenEqual() {
-        String expected = "Baeldung";
-        String actual = "Baeldung";
-
-        assertEquals(expected, actual, "NOT EQUAL");
-    }
-
-
-    @Test
-    public void whenAssertingNull_thenTrue() {
-        String car = null;
-        assertNull("The car should be null", car);
-    }
-
-    @Test
-    public void whenAssertingConditions_thenVerified() {
-        assertTrue("5 is greater then 4", 5 > 4);
-        assertFalse("5 is not greater then 6", 5 > 6);
-    }
-
-    @Test
-    public void checkUserAnswer_CorrectLetter_ReturnDecodedWordToGuess(){
+    public void checkUserAnswer_CorrectLetter_ReturnDecodedWordToGuess() {
         String exceptedResult = "a*********";
         String result = game.checkUserAnswer("automobile", "**********", 'a');
         assertEquals(exceptedResult, result);
@@ -129,7 +123,7 @@ class GameTest {
 
 
     @Test
-    public void checkUserAnswer_MultiCorrectLetters_ReturnDecodedWordToGuess(){
+    public void checkUserAnswer_MultiCorrectLetters_ReturnDecodedWordToGuess() {
         String exceptedResult = "***o*o****";
         String result = game.checkUserAnswer("automobile", "**********", 'o');
         assertEquals(exceptedResult, result);
@@ -137,10 +131,27 @@ class GameTest {
 
 
     @Test
-    public void checkUserAnswer_IncorrectLetter_ReturnUncodedWordToGuess(){
+    public void checkUserAnswer_IncorrectLetter_ReturnUncodedWordToGuess() {
         String exceptedResult = "**********";
         String result = game.checkUserAnswer("automobile", "**********", 'x');
         assertEquals(exceptedResult, result);
+    }
+
+
+    @Test
+    public void codeWordToGuess_Show3Letters_ReturnCodedWordWith3LettersExposed() {
+        String expectedResult = "p*p*p***";
+        String result = game.codeWordToGuess("papapooa", 'p');
+        assertTrue(expectedResult.length() == result.length());
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void codeWordToGuess_Show1Letter_ReturnCodedWordWith1LetterExposed() {
+        String expectedResult = "m*********";
+        String result = game.codeWordToGuess("montenegro", 'm');
+        assertTrue(expectedResult.length() == result.length());
+        assertEquals(expectedResult, result);
     }
 
 

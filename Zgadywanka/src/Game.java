@@ -32,7 +32,7 @@ public class Game {
                 wordsFromFile.isEmpty()
                         ? "File not found or is empty"
                         : "Game begins...\n";
-        if(wordsFromFile.isEmpty()) {
+        if (wordsFromFile.isEmpty()) {
             Main.fileFound = false;
         }
         System.out.println(message);
@@ -58,17 +58,31 @@ public class Game {
         return wordToGuess;
     }
 
-    private String codeWordToGuess(String wordToGuess, char letterToShow) {
-        String hiddenWord = "";
+    public String codeWordToGuess(String wordToGuess, char letterToShow) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
         for (int i = 0; i < wordToGuess.length(); i++) {
             if (wordToGuess.charAt(i) == letterToShow) {
-                hiddenWord += letterToShow;
+                stringBuilder.append(letterToShow);
             } else {
-                hiddenWord += "*";
+                stringBuilder.append("*");
             }
         }
-        return hiddenWord;
+        return stringBuilder.toString();
     }
+
+//    public String codeWordToGuess(String wordToGuess, char letterToShow) {
+//        String hiddenWord = "";
+//        for (int i = 0; i < wordToGuess.length(); i++) {
+//            if (wordToGuess.charAt(i) == letterToShow) {
+//                hiddenWord += letterToShow;
+//            } else {
+//                hiddenWord += "*";
+//            }
+//        }
+//        return hiddenWord;
+//    }
 
     public void start() {
         wordToGuess = prepareWordToGuess();
@@ -138,11 +152,11 @@ public class Game {
 
     public String checkUserAnswer(String wordToGuess, String codedWord, char letterFromUser) {
         char[] outputWordChars = codedWord.toCharArray();
-            for (int i = 0; i < outputWordChars.length; i++) {
-                if (wordToGuess.charAt(i) == letterFromUser) {
-                    outputWordChars[i] = letterFromUser;
-                }
+        for (int i = 0; i < outputWordChars.length; i++) {
+            if (wordToGuess.charAt(i) == letterFromUser) {
+                outputWordChars[i] = letterFromUser;
             }
+        }
         return String.valueOf(outputWordChars);
     }
 
